@@ -30,7 +30,7 @@ export function InicioPage() {
             <MetricStrip>
               <Metric tone="ok" label={t.metricas.emDia} value={d.metricas.emDia} hint={t.metricas.emDiaHint(d.metricas.obrigatorios)} />
               <Metric tone="review" label={t.metricas.emAnalise} value={d.metricas.emAnalise} hint={t.metricas.emAnaliseHint} />
-              <Metric tone="pending" label={t.metricas.pendentes} value={d.metricas.pendentes} hint={t.metricas.pendentesHint} />
+              <Metric tone="pending" label={t.metricas.exigenciasNaoAtendidas} value={d.resumo.pendingCount} />
               <Metric
                 tone="primary"
                 label={t.metricas.vencidos}
@@ -41,7 +41,7 @@ export function InicioPage() {
             <Grid>
               <BlocoAtencao atencao={d.atencao} />
               <BlocoObras obras={d.obras} />
-              <BlocoVencimentos vencimentos={d.vencimentos} hoje={d.hoje} />
+              <BlocoVencimentos resumo={d.resumo} />
               <BlocoAtualizacoes eventos={d.eventos} />
             </Grid>
           </Stack>

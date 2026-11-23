@@ -1,5 +1,5 @@
 import { ArrowUpTrayIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { acaoPara, diasEntre, type ItemAtencao } from '@/entities';
+import { acaoPara, type ItemAtencao } from '@/entities';
 import { formatDate, paths } from '@/shared/lib';
 import { strings } from '@/shared/strings';
 import { Badge, Block, BlockRow, BlockRowLink, ButtonLink, Icon, Mono, Text } from '@/shared/ui';
@@ -106,41 +106,19 @@ export function BlocoObras({ obras }: { obras: Inicio['obras'] }) {
   );
 }
 
-export function BlocoVencimentos({ vencimentos, hoje }: { vencimentos: Inicio['vencimentos']; hoje: string }) {
+export function BlocoVencimentos({ resumo }: { resumo: Inicio['resumo'] }) {
   return (
     <Block title={t.vencimentos.title}>
-      {vencimentos.length === 0 ? (
-        <Text size="support" tone="muted" className="px-4 py-6">
-          {t.vencimentos.vazio}
-        </Text>
-      ) : (
-        <ul className="divide-y divide-border">
-          {vencimentos.map((v) => {
-            const dias = diasEntre(hoje, v.validade);
-            const perto = dias <= 30;
-            return (
-              <li key={v.id}>
-                <BlockRowLink to={paths.documento(v.para.id)}>
-                  <span
-                    className={
-                      perto
-                        ? 'flex w-10 flex-none flex-col items-center rounded-control bg-warn-bg py-1 text-warn'
-                        : 'flex w-10 flex-none flex-col items-center rounded-control border border-border py-1 text-ink-2'
-                    }
-                  >
-                    <span className="tabular text-body font-semibold">{formatDate(v.validade, 'day')}</span>
-                    <span className="text-tag">{formatDate(v.validade, 'monthShort')}</span>
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-body">{v.titulo}</p>
-                    <Text size="support" tone="muted" className="mt-0.5">
-                      {dias <= 60 ? t.vencimentos.emDias(dias) : t.vencimentos.emMes(formatDate(v.validade, 'monthYearLong'))}
-                    </Text>
-                  </div>
-                </BlockRowLink>
-              </li>
-            );
-          })}
+      <Text size="support" tone="muted" className="px-4 py-3">
+        {t.vencimentos.total(resumo.upcomingExpirationCount)}
+      </Text>
+      {resumo.nextExpiringDocumentNames.length > 0 && (
+        <ul className="divide-y divide-border border-t border-border">
+          {resumo.nextExpiringDocumentNames.map((nome, indice) => (
+            <BlockRow as="li" key={`${nome}-${indice}`}>
+              <p className="text-body">{nome}</p>
+            </BlockRow>
+          ))}
         </ul>
       )}
     </Block>
