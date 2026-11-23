@@ -9,8 +9,7 @@ export const inicioPage = {
     emDiaHint: (total: number) => `de ${total} documentos obrigatórios`,
     emAnalise: 'Em análise',
     emAnaliseHint: 'com a equipe da JotaNunes',
-    pendentes: 'Pendentes',
-    pendentesHint: 'ainda não enviado',
+    exigenciasNaoAtendidas: 'Exigências não atendidas',
     vencidos: 'Vencidos',
     vencidosHint: 'precisa renovar',
   },
@@ -32,9 +31,7 @@ export const inicioPage = {
   },
   vencimentos: {
     title: 'Vencimentos próximos',
-    emDias: (dias: number) => (dias === 0 ? 'Vence hoje' : dias === 1 ? 'Vence amanhã' : `Vence em ${dias} dias`),
-    emMes: (mesAno: string) => `Vence em ${mesAno}`,
-    vazio: 'Nenhum documento com validade por vencer.',
+    total: (n: number) => `${n} ${n === 1 ? 'documento' : 'documentos'} nos próximos 30 dias`,
   },
   atualizacoes: {
     title: 'Últimas atualizações',
