@@ -3,10 +3,14 @@ import { formatDate, useStore } from '@/shared/lib';
 import { strings, type StatusKey } from '@/shared/strings';
 import { Badge, Icon, Mono, Table, Tag, type TableColumn } from '@/shared/ui';
 import { exigenciasSemEnvioAnterior } from '../checklistMock';
-import { primeirosEnviosStore } from '../primeiroEnvioMock';
+import { enviosChecklistStore } from '../primeiroEnvioMock';
 import type { ItemChecklist, StatusChecklist } from '../types';
 
 const t = strings.pages.documentos;
+
+function podeRenovar(item: ItemChecklist) {
+  return item.status === 'Vencido' && item.documentSubmissionId !== null;
+}
 
 const badgePorStatus: Record<StatusChecklist, StatusKey> = {
   Pendente: 'pendente',
@@ -53,7 +57,7 @@ const colunas: readonly TableColumn<ItemChecklist>[] = [
 ];
 
 export function TabelaDocumentos({ itens, onEnvio }: { itens: readonly ItemChecklist[]; onEnvio: (item: ItemChecklist) => void }) {
-  const envios = useStore(primeirosEnviosStore);
+  const envios = useStore(enviosChecklistStore);
   return (
     <Table
       caption={t.title}
@@ -62,8 +66,13 @@ export function TabelaDocumentos({ itens, onEnvio }: { itens: readonly ItemCheck
       rowKey={(item) => item.documentDefinitionId}
       rowClick={false}
       action={{
-        visible: (item) => exigenciasSemEnvioAnterior.has(item.documentDefinitionId),
-        label: (item) => envios.has(item.documentDefinitionId) ? t.primeiroEnvio.consultar : t.primeiroEnvio.enviar,
+        visible: (item) => envios.has(item.documentDefinitionId)
+          || podeRenovar(item)
+          || (item.documentSubmissionId === null && exigenciasSemEnvioAnterior.has(item.documentDefinitionId)),
+        label: (item) => {
+          if (envios.has(item.documentDefinitionId)) return t.primeiroEnvio.consultar;
+          return podeRenovar(item) ? t.primeiroEnvio.renovar : t.primeiroEnvio.enviar;
+        },
         describe: (item) => item.documentDefinitionName,
         onClick: onEnvio,
         emphasis: () => true,
