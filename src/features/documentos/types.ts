@@ -2,30 +2,26 @@ import type {
   ArquivoEnviado,
   Decisao,
   EnvioAnterior,
-  LinhaDocumento,
-  ListaExigencias,
   Obra,
   Obrigatoriedade,
   Situacao,
-  contagemFuncionarios,
 } from '@/entities';
 
 export type FiltroDocumentos = 'todos' | 'pendentes' | 'analise' | 'aprovados';
 
-export type GrupoDocumentos = {
-  lista: ListaExigencias;
-  obras: Obra[];
-  linhas: LinhaDocumento[];
-  emDia: number;
-  obrigatorios: number;
-  /** A lista pede documentos de funcionário: mostra a faixa "Funcionários em campo". */
-  temFuncionarios: boolean;
+export type StatusChecklist = 'Pendente' | 'Em análise' | 'Atendido' | 'Vencido';
+
+export type ItemChecklist = {
+  documentDefinitionId: string;
+  documentDefinitionName: string;
+  required: boolean;
+  status: StatusChecklist;
+  expiresAt: string | null;
 };
 
 export type ListaDocumentos = {
-  grupos: GrupoDocumentos[];
+  itens: readonly ItemChecklist[];
   contagem: Record<FiltroDocumentos, number>;
-  funcionarios: ReturnType<typeof contagemFuncionarios>;
 };
 
 /**

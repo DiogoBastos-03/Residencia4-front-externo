@@ -8,35 +8,12 @@ export const documentosPage = {
   filtros: { todos: 'Todos', pendentes: 'Pendentes', analise: 'Análise', aprovados: 'Aprovados' },
   buscaLabel: 'Buscar documento',
   buscaPlaceholder: 'Buscar documento',
-  caption: (lista: string) => `Documentos de ${lista}`,
-  colunas: { documento: 'Documento', tipo: 'Tipo', situacao: 'Situação', validade: 'Validade', ultimoEnvio: 'Último envio' },
-  acaoDescricao: (nome: string) => nome,
-  funcionarios: {
-    titulo: 'Funcionários em campo',
-    resumo: (c: { total: number; emDia: number; emAnalise: number; pendente: number; reprovado: number }) =>
-      [
-        `${c.total} cadastrados`,
-        `${c.emDia} em dia`,
-        c.emAnalise > 0 ? `${c.emAnalise} em análise` : '',
-        c.pendente > 0 ? `${c.pendente} ${c.pendente === 1 ? 'pendente' : 'pendentes'}` : '',
-        c.reprovado > 0 ? `${c.reprovado} ${c.reprovado === 1 ? 'reprovado' : 'reprovados'}` : '',
-      ]
-        .filter(Boolean)
-        .join(dominio.separador),
-    nenhum: 'Ninguém cadastrado ainda',
-    ver: 'Ver funcionários',
-    adicionar: 'Adicionar',
-  },
-  comoFunciona: {
-    title: 'Como funciona',
-    texto:
-      'Um documento da empresa é enviado uma vez e vale para todas as obras que o exigem. Se você não enviar, ele continua pendente e aparece para a equipe da JotaNunes — nada é bloqueado automaticamente.',
-  },
+  colunas: { documento: 'Documento', obrigatoriedade: 'Obrigatoriedade', situacao: 'Situação', validade: 'Validade' },
   semResultadoTitle: 'Nenhum documento com este filtro',
   semResultadoDescription: 'Troque o filtro ou apague a busca para ver todos os documentos exigidos.',
   limparFiltros: 'Ver todos',
   vazioTitle: 'Nenhum documento exigido ainda',
-  vazioDescription: 'Os documentos aparecem quando a JotaNunes vincula sua empresa a uma obra com lista de exigências do seu tipo.',
+  vazioDescription: 'O checklist da sua empresa está vazio.',
   painel: {
     exigidoEm: 'Exigido em',
     suasObras: (n: number) => `Suas ${n} obras`,

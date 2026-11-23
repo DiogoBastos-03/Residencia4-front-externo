@@ -1,21 +1,25 @@
 import { useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router';
-import type { LinhaDocumento } from '@/entities';
-import type { FiltroDocumentos } from '../types';
+import type { FiltroDocumentos, ItemChecklist, StatusChecklist } from '../types';
 
 const FILTROS: readonly FiltroDocumentos[] = ['todos', 'pendentes', 'analise', 'aprovados'];
+
+export const filtroDoStatus: Record<StatusChecklist, Exclude<FiltroDocumentos, 'todos'>> = {
+  Pendente: 'pendentes',
+  Vencido: 'pendentes',
+  'Em análise': 'analise',
+  Atendido: 'aprovados',
+};
 
 function normalizar(texto: string) {
   return texto.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 }
 
-export function filtrarLinhas(linhas: readonly LinhaDocumento[], filtro: FiltroDocumentos, busca: string): LinhaDocumento[] {
+export function filtrarLinhas(linhas: readonly ItemChecklist[], filtro: FiltroDocumentos, busca: string): ItemChecklist[] {
   const termo = normalizar(busca.trim());
-  return linhas.filter((l) => {
-    if (filtro === 'pendentes' && !(l.situacao === 'pendente' || l.situacao === 'vencido' || l.situacao === 'reprovado')) return false;
-    if (filtro === 'analise' && l.situacao !== 'emAnalise') return false;
-    if (filtro === 'aprovados' && l.situacao !== 'aprovado') return false;
-    return !termo || normalizar(l.nome).includes(termo);
+  return linhas.filter((item) => {
+    if (filtro !== 'todos' && filtroDoStatus[item.status] !== filtro) return false;
+    return !termo || normalizar(item.documentDefinitionName).includes(termo);
   });
 }
 
