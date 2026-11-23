@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useMockQuery, useStore } from '@/shared/lib';
 import { checklistMock } from '../checklistMock';
-import { primeirosEnviosStore } from '../primeiroEnvioMock';
+import { enviosChecklistStore } from '../primeiroEnvioMock';
 import type { ItemChecklist, ListaDocumentos } from '../types';
 import { filtroDoStatus } from './useFiltrosDocumentos';
 
@@ -14,11 +14,16 @@ function carregarDocumentos(itens: readonly ItemChecklist[]): ListaDocumentos {
 const VAZIO = carregarDocumentos([]);
 
 function useChecklist() {
-  const envios = useStore(primeirosEnviosStore);
+  const envios = useStore(enviosChecklistStore);
   return useMemo(() => checklistMock.map((item): ItemChecklist => {
     const envio = envios.get(item.documentDefinitionId);
     if (!envio) return item;
-    return { ...item, status: envio.situacao?.status === 'Approved' ? 'Atendido' : 'Em análise' };
+    return {
+      ...item,
+      documentSubmissionId: envio.documentSubmissionId,
+      status: envio.situacao?.status === 'Approved' ? 'Atendido' : 'Em análise',
+      expiresAt: null,
+    };
   }), [envios]);
 }
 

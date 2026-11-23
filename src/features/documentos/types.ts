@@ -13,6 +13,7 @@ export type StatusChecklist = 'Pendente' | 'Em análise' | 'Atendido' | 'Vencido
 
 export type ItemChecklist = {
   documentDefinitionId: string;
+  documentSubmissionId: string | null;
   documentDefinitionName: string;
   required: boolean;
   status: StatusChecklist;

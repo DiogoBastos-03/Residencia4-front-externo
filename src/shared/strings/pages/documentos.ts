@@ -16,7 +16,9 @@ export const documentosPage = {
   vazioDescription: 'O checklist da sua empresa está vazio.',
   primeiroEnvio: {
     enviar: 'Enviar documento',
+    renovar: 'Renovar',
     confirmar: 'Confirmar envio',
+    confirmarRenovacao: 'Confirmar renovação',
     enviando: 'Enviando…',
     recebido: 'Arquivo recebido',
     protocolo: (id: string) => `ID do envio: ${id}`,
