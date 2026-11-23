@@ -9,7 +9,7 @@ const ACCEPT = '.pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png';
 
 type Props = {
   value: ArquivoEscolhido | null;
-  onChange: (arquivo: ArquivoEscolhido | null) => void;
+  onChange: (arquivo: ArquivoEscolhido | null, file: File | null) => void;
   /** Erro vindo da validação do formulário (ex.: nenhum arquivo escolhido). */
   erro?: string;
 };
@@ -42,7 +42,7 @@ export function CampoArquivo({ value, onChange, erro }: Props) {
   const mensagemProblema = problema === 'formato' ? t.erroFormato : problema === 'tamanho' ? t.erroTamanho : undefined;
 
   function escolher(file: File | undefined) {
-    if (file) onChange(doArquivo(file));
+    if (file) onChange(doArquivo(file), file);
   }
 
   function soltar(event: DragEvent<HTMLDivElement>) {
@@ -87,7 +87,7 @@ export function CampoArquivo({ value, onChange, erro }: Props) {
               {mensagemProblema ?? t.pronto(strings.dominio.tamanho(value.tamanhoKb))}
             </p>
           </div>
-          <IconButton icon={TrashIcon} label={t.remover(value.nome)} variant="ghost" size="sm" onClick={() => onChange(null)} className={problema ? 'text-danger' : undefined} />
+          <IconButton icon={TrashIcon} label={t.remover(value.nome)} variant="ghost" size="sm" onClick={() => onChange(null, null)} className={problema ? 'text-danger' : undefined} />
         </div>
       ) : (
         <div

@@ -1,5 +1,10 @@
 import type { ItemChecklist } from './types';
 
+const ALVARA_ID = '8a17d513-1d11-4027-9cb4-22cb7b285739';
+
+/** Histórico auxiliar da simulação, fora da resposta do checklist. */
+export const exigenciasSemEnvioAnterior: ReadonlySet<string> = new Set([ALVARA_ID]);
+
 /** Resposta simulada de GET /api/v1/submissions/checklist. */
 export const checklistMock: readonly ItemChecklist[] = [
   {
@@ -24,7 +29,7 @@ export const checklistMock: readonly ItemChecklist[] = [
     expiresAt: null,
   },
   {
-    documentDefinitionId: '8a17d513-1d11-4027-9cb4-22cb7b285739',
+    documentDefinitionId: ALVARA_ID,
     documentDefinitionName: 'Alvará de Funcionamento',
     required: true,
     status: 'Pendente',
@@ -35,6 +40,13 @@ export const checklistMock: readonly ItemChecklist[] = [
     documentDefinitionName: 'Comprovante de Inscrição Estadual',
     required: false,
     status: 'Atendido',
+    expiresAt: null,
+  },
+  {
+    documentDefinitionId: 'f28d6dbf-f5bb-4c76-a958-1a68020ceb87',
+    documentDefinitionName: 'Comprovante de Inscrição Municipal',
+    required: true,
+    status: 'Pendente',
     expiresAt: null,
   },
 ];

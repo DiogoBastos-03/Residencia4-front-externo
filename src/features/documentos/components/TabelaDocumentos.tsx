@@ -1,7 +1,9 @@
 import { DocumentTextIcon } from '@heroicons/react/24/outline';
-import { formatDate } from '@/shared/lib';
+import { formatDate, useStore } from '@/shared/lib';
 import { strings, type StatusKey } from '@/shared/strings';
 import { Badge, Icon, Mono, Table, Tag, type TableColumn } from '@/shared/ui';
+import { exigenciasSemEnvioAnterior } from '../checklistMock';
+import { primeirosEnviosStore } from '../primeiroEnvioMock';
 import type { ItemChecklist, StatusChecklist } from '../types';
 
 const t = strings.pages.documentos;
@@ -50,6 +52,22 @@ const colunas: readonly TableColumn<ItemChecklist>[] = [
   },
 ];
 
-export function TabelaDocumentos({ itens }: { itens: readonly ItemChecklist[] }) {
-  return <Table caption={t.title} columns={colunas} rows={itens} rowKey={(item) => item.documentDefinitionId} />;
+export function TabelaDocumentos({ itens, onEnvio }: { itens: readonly ItemChecklist[]; onEnvio: (item: ItemChecklist) => void }) {
+  const envios = useStore(primeirosEnviosStore);
+  return (
+    <Table
+      caption={t.title}
+      columns={colunas}
+      rows={itens}
+      rowKey={(item) => item.documentDefinitionId}
+      rowClick={false}
+      action={{
+        visible: (item) => exigenciasSemEnvioAnterior.has(item.documentDefinitionId),
+        label: (item) => envios.has(item.documentDefinitionId) ? t.primeiroEnvio.consultar : t.primeiroEnvio.enviar,
+        describe: (item) => item.documentDefinitionName,
+        onClick: onEnvio,
+        emphasis: () => true,
+      }}
+    />
+  );
 }

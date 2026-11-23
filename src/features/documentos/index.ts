@@ -4,6 +4,7 @@ export { useAcoesEnvio } from './hooks/useAcoesEnvio';
 export type * from './types';
 export { TabelaDocumentos } from './components/TabelaDocumentos';
 export { DocumentoDrawer } from './components/DocumentoDrawer';
+export { PrimeiroEnvioDrawer } from './components/PrimeiroEnvioDrawer';
 export { EnvioForm } from './components/EnvioForm';
 export { CampoArquivo } from './components/CampoArquivo';
 export { filtrarLinhas, useFiltrosDocumentos } from './hooks/useFiltrosDocumentos';
