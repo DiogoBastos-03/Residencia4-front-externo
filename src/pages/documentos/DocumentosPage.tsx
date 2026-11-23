@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { DocumentTextIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
-import { DocumentoDrawer, filtrarLinhas, TabelaDocumentos, useDocumentos, useFiltrosDocumentos, type FiltroDocumentos } from '@/features/documentos';
+import { DocumentoDrawer, filtrarLinhas, PrimeiroEnvioDrawer, TabelaDocumentos, useDocumentos, useFiltrosDocumentos, type FiltroDocumentos, type ItemChecklist } from '@/features/documentos';
 import { focarDepois, paths, useDocumentTitle } from '@/shared/lib';
 import { strings } from '@/shared/strings';
 import { AsyncContent, Button, EmptyState, FilterBar, PageHeader, SearchInput, Skeleton, SkeletonTable, Stack } from '@/shared/ui';
@@ -18,6 +19,7 @@ export function DocumentosPage() {
   const navigate = useNavigate();
   const query = useDocumentos();
   const { filtro, busca, atualizar } = useFiltrosDocumentos();
+  const [itemEnvio, setItemEnvio] = useState<ItemChecklist | null>(null);
 
   function fechar() {
     const p = new URLSearchParams(params);
@@ -48,7 +50,7 @@ export function DocumentosPage() {
         skeleton={
           <Stack>
             <Skeleton className="h-8.5 w-96 max-w-full" />
-            <SkeletonTable rows={5} columns={4} />
+            <SkeletonTable rows={6} columns={5} />
           </Stack>
         }
         isEmpty={(d) => d.itens.length === 0}
@@ -82,13 +84,16 @@ export function DocumentosPage() {
                   action={<Button onClick={() => atualizar({ filtro: 'todos', busca: '' })}>{t.limparFiltros}</Button>}
                 />
               ) : (
-                <TabelaDocumentos itens={itens} />
+                <TabelaDocumentos itens={itens} onEnvio={setItemEnvio} />
               )}
             </Stack>
           );
         }}
       </AsyncContent>
       <DocumentoDrawer id={id} enviar={params.get('acao') === 'enviar'} exemplo={lerExemplo(params.get('exemplo'))} onClose={fechar} onModo={trocarModo} />
+      {itemEnvio && (
+        <PrimeiroEnvioDrawer item={itemEnvio} cenario={params.get('primeiroEnvio')} onClose={() => setItemEnvio(null)} />
+      )}
     </Stack>
   );
 }

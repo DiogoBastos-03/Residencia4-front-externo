@@ -1,5 +1,7 @@
-import { useMockQuery } from '@/shared/lib';
+import { useMemo } from 'react';
+import { useMockQuery, useStore } from '@/shared/lib';
 import { checklistMock } from '../checklistMock';
+import { primeirosEnviosStore } from '../primeiroEnvioMock';
 import type { ItemChecklist, ListaDocumentos } from '../types';
 import { filtroDoStatus } from './useFiltrosDocumentos';
 
@@ -11,11 +13,22 @@ function carregarDocumentos(itens: readonly ItemChecklist[]): ListaDocumentos {
 
 const VAZIO = carregarDocumentos([]);
 
+function useChecklist() {
+  const envios = useStore(primeirosEnviosStore);
+  return useMemo(() => checklistMock.map((item): ItemChecklist => {
+    const envio = envios.get(item.documentDefinitionId);
+    if (!envio) return item;
+    return { ...item, status: envio.situacao?.status === 'Approved' ? 'Atendido' : 'Em análise' };
+  }), [envios]);
+}
+
 export function useDocumentos() {
-  return useMockQuery('documentos', () => carregarDocumentos(checklistMock), { empty: VAZIO });
+  const itens = useChecklist();
+  return useMockQuery('documentos', () => carregarDocumentos(itens), { empty: VAZIO, version: itens });
 }
 
 /** Documentos da empresa com pendência — o contador do item "Documentos" no menu. */
 export function useContadorPendencias() {
-  return useMockQuery('contador-pendencias', () => carregarDocumentos(checklistMock).contagem.pendentes, { simulate: false });
+  const itens = useChecklist();
+  return useMockQuery('contador-pendencias', () => carregarDocumentos(itens).contagem.pendentes, { simulate: false, version: itens });
 }

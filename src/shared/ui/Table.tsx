@@ -28,6 +28,8 @@ export type TableAction<T> = {
   to?: (row: T) => string;
   /** Botão com borda em vez de terciário (ação que pede atenção). */
   emphasis?: (row: T) => boolean;
+  /** Exibe a ação somente nas linhas que atendem à condição. */
+  visible?: (row: T) => boolean;
   /** Ação indisponível nesta linha (a linha deixa de ser clicável). */
   disabled?: (row: T) => boolean;
 };
@@ -100,7 +102,7 @@ function useRowClick<T>(action: TableAction<T> | undefined, rowTo: ((row: T) => 
       navigate(rowTo(row));
       return;
     }
-    if (!action || action.disabled?.(row)) return;
+    if (!action || action.visible?.(row) === false || action.disabled?.(row)) return;
     if (action.to) navigate(action.to(row));
     else action.onClick?.(row);
   };
@@ -126,7 +128,7 @@ export function Table<T>({ caption, columns, rows, rowKey, action, rowTo, rowCli
   const compact = density === 'compact';
   const clique = useRowClick(action, rowTo);
   const rowClick = linhaClicavel ? clique : undefined;
-  const clicavel = (row: T) => Boolean(rowClick) && (Boolean(rowTo) || !action?.disabled?.(row));
+  const clicavel = (row: T) => Boolean(rowClick) && (Boolean(rowTo) || (action?.visible?.(row) !== false && !action?.disabled?.(row)));
   const titleColumn = columns.find((c) => c.mobile === 'title') ?? columns[0];
   const badgeColumn = columns.find((c) => c.mobile === 'badge');
   const fieldColumns = columns.filter(
@@ -182,7 +184,7 @@ export function Table<T>({ caption, columns, rows, rowKey, action, rowTo, rowCli
                 ))}
                 {action && (
                   <td className={cn('text-right', compact ? 'px-3 py-1' : 'px-4 py-2')}>
-                    <ActionButton action={action} row={row} mobile={false} />
+                    {action.visible?.(row) !== false && <ActionButton action={action} row={row} mobile={false} />}
                   </td>
                 )}
               </tr>
@@ -212,7 +214,7 @@ export function Table<T>({ caption, columns, rows, rowKey, action, rowTo, rowCli
                 ))}
               </dl>
             )}
-            {action && (
+            {action && action.visible?.(row) !== false && (
               <div className="mt-3">
                 <ActionButton action={action} row={row} mobile />
               </div>
