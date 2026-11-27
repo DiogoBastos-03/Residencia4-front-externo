@@ -2,6 +2,7 @@
 export const paths = {
   entrar: '/entrar',
   esqueciSenha: '/entrar/esqueci-a-senha',
+  primeiroAcesso: '/entrar/primeiro-acesso',
   inicio: '/',
   documentos: '/documentos',
   /** Painel lateral do documento (da empresa ou arquivo de funcionário). `enviar` abre o envio. */

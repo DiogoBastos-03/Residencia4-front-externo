@@ -16,8 +16,8 @@ export const estadosPage = {
     outros: 'Outros',
   },
   estados: {
-    entrar: ['Entrar', 'CNPJ e senha. Com o CNPJ 12.345.678/0001-90 e qualquer senha, entra.', '"Sair" no rodapé da sidebar e confirmar.'],
-    esqueci: ['Esqueci a senha', 'Informar o e-mail; depois, a confirmação de envio do link.', '"Esqueci a senha" na tela de entrar.'],
+    entrar: ['Entrar', 'CNPJ e senha, validados pela API (POST /auth/login). Com sessão ativa, redireciona para o Início.', '"Sair" no rodapé da sidebar e confirmar.'],
+    esqueci: ['Esqueci a senha', 'CNPJ, depois o código de 6 dígitos do e-mail e, por fim, a nova senha (API).', '"Esqueci a senha" na tela de entrar.'],
     inicio: ['Com dados', 'Métricas, o que precisa de atenção, obras, vencimentos e últimas atualizações.', '"Início" no menu.'],
     inicioCarregando: ['Carregando', 'Esqueleto das métricas e dos quatro blocos.', 'só pela URL.'],
     inicioErro: ['Erro', 'Falha ao carregar, com "Tentar de novo".', 'só pela URL.'],

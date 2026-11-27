@@ -1,7 +1,9 @@
 import { useCallback, useState } from 'react';
-import { Outlet } from 'react-router';
+import { Navigate, Outlet } from 'react-router';
 import { ModalSair } from '@/features/acesso';
 import { useContadorPendencias } from '@/features/documentos';
+import { sessaoStore } from '@/shared/api';
+import { paths, useStore } from '@/shared/lib';
 import { strings } from '@/shared/strings';
 import { MobileSidebar } from './MobileSidebar';
 import { MobileTopBar } from './MobileTopBar';
@@ -20,6 +22,11 @@ export function AppLayout() {
     setSairAberto(true);
   }, []);
   const { data: pendencias } = useContadorPendencias();
+  // O loader confere a sessão ao navegar; isto cobre a sessão que acaba com a tela aberta
+  // (refresh recusado, saída em outra aba).
+  const sessao = useStore(sessaoStore);
+
+  if (!sessao) return <Navigate to={paths.entrar} replace />;
 
   return (
     <div className="flex min-h-dvh gap-2 bg-app p-3 nav:h-dvh max-sm:p-2">

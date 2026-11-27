@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router';
+import { encerrarSessao } from '@/shared/api';
 import { paths } from '@/shared/lib';
 import { strings } from '@/shared/strings';
 import { Button, Modal } from '@/shared/ui';
@@ -21,7 +22,8 @@ export function ModalSair({ open, onClose }: { open: boolean; onClose: () => voi
             variant="primary"
             onClick={() => {
               onClose();
-              navigate(paths.entrar);
+              encerrarSessao();
+              navigate(paths.entrar, { replace: true });
             }}
           >
             {t.confirmar}

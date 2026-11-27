@@ -10,6 +10,6 @@ export { paths } from './paths';
 export { useExitTransition, EXIT_MS } from './useExitTransition';
 export { createStore, useStore, type Store } from './createStore';
 export { parseDateBr, maskDateBr, isoToBr, parseMonthBr, maskMonthBr } from './dateInput';
-export { cpfValido, emailValido } from './validacao';
+export { cpfValido, emailValido, problemaSenha, type ProblemaSenha } from './validacao';
 export { validarArquivo, ARQUIVO_MAX_MB, type ArquivoEscolhido, type ProblemaArquivo } from './arquivo';
 export { focarDepois } from './foco';

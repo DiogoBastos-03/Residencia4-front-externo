@@ -40,6 +40,15 @@ Fica em `src/app/brand/`. É a mesma regra do interno, lida por `src/shared/ui/L
   - Uma lista só vale para a empresa se o tipo dela (serviço ou material) estiver em `empresa.tipos`. Para ver a regra funcionando, o Edifício Jardins da Torre tem uma lista de material que não aparece.
   - Documento de funcionário é um item com um arquivo por pessoa (`arquivos`), cada um com validade e decisão próprias.
 
+## Autenticação (API real)
+
+O acesso já fala com o backend, pelo contrato em `auth-contract.md`. O resto do portal ainda usa os dados de demonstração.
+- **Configuração**: copie `.env.example` para `.env.local` e ajuste `VITE_API_URL` (URL do backend, sem barra no fim). O backend precisa liberar CORS para a origem do front (`http://localhost:5173` em dev e o domínio do Vercel).
+- **Cliente**: `src/shared/api/client.ts` (axios). Põe o `Authorization: Bearer` da sessão e, num `401 UNAUTHENTICATED`, renova o token por `/refresh` e repete a chamada. As rotas de auth ficam em `src/shared/api/auth.ts`.
+- **Sessão**: `src/shared/api/sessao.ts`, guardada no `localStorage` (sobrevive ao F5 e ao fechar o navegador, até o refresh token vencer). Sair apaga a sessão.
+- **Guards**: `src/app/guards.ts`, ligados como `loader` em `src/app/router.tsx`. Todo o `AppLayout` exige sessão; com senha provisória, a pessoa vai para `/entrar/primeiro-acesso`; com sessão válida, `/entrar` leva ao Início.
+- **Erros**: a API responde `ProblemDetails`; as telas decidem pelo `code` (`lerProblema`/`codigoDoErro` em `src/shared/api/problema.ts`, mensagens em `features/acesso/erros.ts`).
+
 ## Quando a API existir
 
 Os hooks de leitura (`src/features/*/hooks/use*.ts`) devolvem `{ data, isLoading, error, refetch }` por meio de `src/mocks/useDatasetQuery.ts`. Troca-se o corpo deles; as telas não mudam. As ações ficam em `useAcoesEnvio`, `useAcoesRemessa` e `useAcoesEmpresa`.
