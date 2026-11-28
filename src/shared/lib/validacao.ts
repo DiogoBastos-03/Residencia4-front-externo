@@ -15,3 +15,19 @@ export function cpfValido(valor: string): boolean {
   };
   return digito(d.slice(0, 9), 10) === Number(d[9]) && digito(d.slice(0, 10), 11) === Number(d[10]);
 }
+
+export type ProblemaSenha = 'curta' | 'longa' | 'maiuscula' | 'minuscula' | 'numero' | 'especial';
+
+/**
+ * Política de senha da API: 8 caracteres a 72 bytes UTF-8, com maiúscula, minúscula, número
+ * e caractere especial (espaço não conta). Devolve a primeira regra violada, ou `null`.
+ */
+export function problemaSenha(senha: string): ProblemaSenha | null {
+  if (senha.length < 8) return 'curta';
+  if (new TextEncoder().encode(senha).length > 72) return 'longa';
+  if (!/\p{Lu}/u.test(senha)) return 'maiuscula';
+  if (!/\p{Ll}/u.test(senha)) return 'minuscula';
+  if (!/\p{N}/u.test(senha)) return 'numero';
+  if (!/[^\p{L}\p{N}\s]/u.test(senha)) return 'especial';
+  return null;
+}

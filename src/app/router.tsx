@@ -11,16 +11,25 @@ import { InicioPage } from '@/pages/inicio/InicioPage';
 import { NaoEncontradaPage } from '@/pages/nao-encontrada/NaoEncontradaPage';
 import { ObraPage } from '@/pages/obra/ObraPage';
 import { ObrasPage } from '@/pages/obras/ObrasPage';
+import { PrimeiroAcessoPage } from '@/pages/primeiro-acesso/PrimeiroAcessoPage';
 import { paths } from '@/shared/lib';
+import { apenasVisitante, exigirSenhaProvisoria, exigirSessao } from './guards';
 import { AppLayout } from './layout/AppLayout';
 
+/** Enquanto o guard confere a sessão (pode renovar o token), a tela fica vazia. */
+const HydrateFallback = () => null;
+
 export const router = createBrowserRouter([
-  { path: paths.entrar, element: <EntrarPage /> },
+  { path: paths.entrar, element: <EntrarPage />, loader: apenasVisitante, HydrateFallback },
+  { path: paths.primeiroAcesso, element: <PrimeiroAcessoPage />, loader: exigirSenhaProvisoria, HydrateFallback },
   { path: paths.esqueciSenha, element: <EsqueciSenhaPage /> },
   // Vitrine do design system — disponível também no build durante a fase de revisão.
   { path: paths.componentes, element: <ComponentesPage /> },
   {
     element: <AppLayout />,
+    // Todo o portal exige login: sem sessão válida, volta para /entrar.
+    loader: exigirSessao,
+    HydrateFallback,
     children: [
       { index: true, element: <InicioPage /> },
       // O documento e a pessoa abrem em painel lateral sobre a própria lista.
